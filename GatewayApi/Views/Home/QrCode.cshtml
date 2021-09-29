@@ -1,0 +1,29 @@
+﻿
+@{
+    ViewData["Title"] = "QrCode";
+}
+
+<h1>QrCode</h1>
+<div class="row"> 
+   <div class="col">
+     <img id="qrcode" width="400" height="400" />
+   </div>
+</div>
+@section scripts {
+  <script type="text/javascript">
+         $(function () {
+              LoadQrcode()
+        });
+
+        function LoadQrcode()
+        {
+            var url = "../api/Payment/GetQRCodeImage";
+            $.get(url, function (data) {
+                console.info(data)
+           // var data = JSON.parse(data);
+              // $('<img />').attr('src', 'data:image/' + data.type + ';base64,' + data.contents).appendTo('body');
+                   $('#qrcode').attr('src', 'data:image/' + data.type + ';base64,' + data.contents);//.appendTo('body');
+          });
+        }
+     </script>
+}

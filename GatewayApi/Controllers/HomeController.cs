@@ -18,8 +18,15 @@ namespace GatewayApi.Controllers
         {
             _logger = logger;
         }
-
         public async Task<IActionResult> Index()
+        {
+            return await Task.Run(() => View());
+        }
+        public async Task<IActionResult> QrCode()
+        {
+            return await Task.Run(() => View());
+        }
+        public async Task<IActionResult> CreditPayment()
         {
             string apikey = "fb4e35c9374940d7813ec3ae83b00024";
             string MerchantID = "UATAreeya";
@@ -152,11 +159,11 @@ namespace GatewayApi.Controllers
             }
             catch (Exception ex)
             {
-
-                throw ex;
+                _logger.LogError(ex, "Error paymant credit");
+                return await Task.Run(() => View());
             }
 
-            return await Task.Run(() => View());
+            
         }
 
         public IActionResult Privacy()
