@@ -67,9 +67,10 @@ namespace GatewayApi.Controllers
         {
             string ref1 = "A000000677010112";// Customer Reference (depend on merchant business e.g.MobileNo.,Customer ID, InvoiceNo. etc.)A-Z,0-9 only
             string ref2 = "M001002003";// To identify merchant terminal A-Z,0-9 only
-            string merchant = "ABC";// Biller Name show QR code max 25
+            string merchant = "AREEYA";// Biller Name show QR code max 25
+            string Biller_ID = "010754600043107";
             int QRID = 1;
-            string MerchantID = "XXX";
+            string MerchantID = "ARY";
             QRCodeFormat qrCode = new QRCodeFormat();
             qrCode.Indicator = "000201";
             // 1st character :
@@ -83,7 +84,7 @@ namespace GatewayApi.Controllers
             qrCode.Method = "010212";// QR Code Dynamic
             qrCode.Identifier = "3074";
             qrCode.Identifier_AID = "0016" + "A000000677010112"; //FIX
-            qrCode.Identifier_BillerID = "0115" + "010753700001716";
+            qrCode.Identifier_BillerID = "0115" + Biller_ID;// 
             qrCode.Identifier_Ref1 = "02" + ref1.Length.ToString("D2") + ref1;
             qrCode.Identifier_Ref2 = "03" + ref2.Length.ToString("D2") + ref2;
             qrCode.TransactionCurrencyCode = "5303764";
@@ -91,10 +92,21 @@ namespace GatewayApi.Controllers
             qrCode.CountryCode = "5802TH";
             qrCode.MerchantName = "59"+ merchant.Length.ToString("D2")+merchant;
             qrCode.DataFieldTemplate = "62240720D"+ MerchantID + DateTime.Now.ToString("yyMMddHHmm")+QRID.ToString("D5");
-            qrCode.CRC = "6304"  + CRC16.ComputeChecksum(Encoding.Default.GetBytes("1021"));
+          
             string qrcode = qrCode.Method + qrCode.Identifier + qrCode.Identifier_AID + qrCode.Identifier_BillerID + qrCode.Identifier_Ref1 + qrCode.Identifier_Ref2 + qrCode.TransactionCurrencyCode
                 + qrCode.TransactionAmount + qrCode.CountryCode + qrCode.MerchantName + qrCode.DataFieldTemplate + qrCode.CRC;
+            qrCode.CRC = "6304" + CRC16.ComputeChecksum(HexToBytes(qrcode));
+            qrcode = qrcode + qrCode.CRC;
             return qrcode;
+        }
+        static byte[] HexToBytes(string input)
+        {
+            byte[] result = new byte[input.Length / 2];
+            for (int i = 0; i < result.Length; i++)
+            {
+                result[i] = Convert.ToByte(input.Substring(2 * i, 2), 16);
+            }
+            return result;
         }
         [NonAction]
         private string RenderQrCode(string qrcode)
