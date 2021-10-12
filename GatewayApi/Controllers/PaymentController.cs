@@ -95,19 +95,11 @@ namespace GatewayApi.Controllers
           
             string qrcode = qrCode.Method + qrCode.Identifier + qrCode.Identifier_AID + qrCode.Identifier_BillerID + qrCode.Identifier_Ref1 + qrCode.Identifier_Ref2 + qrCode.TransactionCurrencyCode
                 + qrCode.TransactionAmount + qrCode.CountryCode + qrCode.MerchantName + qrCode.DataFieldTemplate + qrCode.CRC;
-            qrCode.CRC = "6304" + CRC16.ComputeChecksum(HexToBytes(qrcode));
+            qrCode.CRC = "6304" + CRC16.ComputeChecksum(Encoding.Default.GetBytes(qrcode));
             qrcode = qrcode + qrCode.CRC;
             return qrcode;
         }
-        static byte[] HexToBytes(string input)
-        {
-            byte[] result = new byte[input.Length / 2];
-            for (int i = 0; i < result.Length; i++)
-            {
-                result[i] = Convert.ToByte(input.Substring(2 * i, 2), 16);
-            }
-            return result;
-        }
+     
         [NonAction]
         private string RenderQrCode(string qrcode)
         {

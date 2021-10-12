@@ -3,10 +3,10 @@
     public class CRC16
     {
 
-        const ushort polynomial = 0xFFFF;//0xA001;
+        const ushort polynomial = 0x1021;//0xA001;
         static readonly ushort[] table = new ushort[256];
-
-        public static ushort ComputeChecksum(byte[] bytes)
+        // public static ushort ComputeChecksum(byte[] bytes)
+        public static string ComputeChecksum(byte[] bytes)
         {
             ushort crc = 0;
             for (int i = 0; i < bytes.Length; ++i)
@@ -14,7 +14,8 @@
                 byte index = (byte)(crc ^ bytes[i]);
                 crc = (ushort)((crc >> 8) ^ table[index]);
             }
-            return crc;
+          //  return crc;
+            return crc.ToString("X4");
         }
 
         static CRC16()
